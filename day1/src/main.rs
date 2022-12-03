@@ -1,7 +1,7 @@
 use std::fs;
 
 fn main() {
-    let contents = fs::read_to_string("src/input.txt").unwrap();
+    let contents = fs::read_to_string("./input.txt").unwrap();
 
     let mut highest_amount_of_calories = 0;
     let mut second_highest_amount_of_calories = 0;

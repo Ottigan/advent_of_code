@@ -16,7 +16,7 @@ fn main() {
 
     let input = fs::read_to_string("src/input.txt").unwrap();
     let mut groups: Vec<Vec<&str>> = Vec::new();
-    let rucksacks = input.split("\n");
+    let rucksacks = input.lines();
 
     let mut group: Vec<&str> = Vec::new();
 
@@ -32,23 +32,24 @@ fn main() {
     groups.push(group);
 
     groups.iter().for_each(|g| {
-        match g[0].find(|item| g[1..].iter().all(|r| r.contains(item))) {
-            Some(index) => {
-                let item = &g[0].chars().nth(index).unwrap().to_string();
-
-                badge_sum += priorities[item];
+        match g[0]
+            .chars()
+            .find(|item| g[1..].iter().all(|r| r.contains(*item)))
+        {
+            Some(item) => {
+                badge_sum += priorities[&item.to_string()];
             }
             None => println!("Error!"),
         }
 
         for r in g {
             let rucksack_length = r.len();
-            let comparments = r.split_at(rucksack_length / 2);
+            let compartments = r.split_at(rucksack_length / 2);
 
             let mut duplicates: Vec<char> = Vec::new();
 
-            for i in comparments.0.chars() {
-                for j in comparments.1.chars() {
+            for i in compartments.0.chars() {
+                for j in compartments.1.chars() {
                     if i == j {
                         if !duplicates.iter().find(|&&v| v == i).is_some() {
                             let key = i.to_string();

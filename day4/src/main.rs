@@ -5,40 +5,22 @@ fn main() {
         .unwrap()
         .lines()
         .map(|line| {
-            return line
-                .replace(",", " ")
-                .replace("-", " ")
-                .split(" ")
-                .map(|v| match v.parse::<i32>() {
-                    Ok(result) => result,
-                    Err(err) => panic!("{err}"),
-                })
-                .collect::<Vec<i32>>()
-                .chunks_exact(4)
-                .map(|chunk| {
-                    let mut first_range = chunk[0]..=chunk[1];
-                    let second_range = chunk[2]..=chunk[3];
+            let sections = line
+                .split(['-', ','])
+                .map(|v| v.parse::<i32>().unwrap())
+                .collect::<Vec<i32>>();
 
-                    // // Part 1
-                    // if (first_range.contains(&chunk[2]) && first_range.contains(&chunk[3]))
-                    //     || (second_range.contains(&chunk[0]) && second_range.contains(&chunk[1]))
-                    // {
-                    //     1
-                    // } else {
-                    //     0
-                    // }
+            let mut first_range = sections[0]..=sections[1];
+            let second_range = sections[2]..=sections[3];
 
-                    // Part 2contains
-                    if first_range.any(|v| second_range.contains(&v)) {
-                        1
-                    } else {
-                        0
-                    }
-                })
-                .next()
-                .unwrap();
+            // Part 1
+            // (first_range.contains(&sections[2]) && first_range.contains(&sections[3]))
+            //     || (second_range.contains(&sections[0]) && second_range.contains(&sections[1]))
+
+            // Part 2
+            first_range.any(|v| second_range.contains(&v))
         })
-        .fold(0, |acc, v| acc + v);
+        .fold(0, |acc, valid| if valid { acc + 1 } else { acc });
 
     println!("{result}");
 }

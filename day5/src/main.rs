@@ -17,7 +17,7 @@ fn main() {
     let mut stacks: Vec<Vec<char>> = vec![Vec::new(); stack_count as usize];
 
     // Fill stacks with initial values
-    let stack_lines: Vec<&str> = raw_stacks.split("\n").collect();
+    let stack_lines: Vec<&str> = raw_stacks.split('\n').collect();
 
     stack_lines
         .iter()
@@ -28,7 +28,6 @@ fn main() {
                 .skip(1)
                 .take(line.len() - 2)
                 .step_by(4)
-                .map(|v| v)
                 .enumerate()
         })
         .for_each(|line| {
@@ -43,11 +42,10 @@ fn main() {
     let steps = procedure.lines().map(|line| {
         let container = Vec::new();
         let mut step = line
-            .split(" ")
+            .split(' ')
             .fold(container, |mut acc, frag| {
-                match frag.parse::<u32>() {
-                    Ok(value) => acc.push(value),
-                    _ => (),
+                if let Ok(value) = frag.parse::<u32>() {
+                    acc.push(value)
                 }
 
                 acc

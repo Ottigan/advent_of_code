@@ -3,16 +3,9 @@ use std::{fs, ops::Sub};
 fn main() {
     let input = fs::read_to_string("src/input.txt").unwrap();
     let (raw_stacks, procedure) = input.split_once("\n\n").unwrap();
-    let stack_lines: Vec<&str> = raw_stacks
-        .split("\n")
-        .collect::<Vec<&str>>()
-        .into_iter()
-        .rev()
-        .collect();
 
-    let num_of_stacks = stack_lines
-        .first()
-        .unwrap()
+    // Get stack count to create 2D Vector representation
+    let stack_count = raw_stacks
         .trim()
         .chars()
         .last()
@@ -20,11 +13,16 @@ fn main() {
         .to_digit(10)
         .unwrap();
 
-    let mut stacks: Vec<Vec<char>> = vec![Vec::new(); num_of_stacks as usize];
+    // Stacks as columns
+    let mut stacks: Vec<Vec<char>> = vec![Vec::new(); stack_count as usize];
+
+    // Fill stacks with initial values
+    let stack_lines: Vec<&str> = raw_stacks.split("\n").collect();
 
     stack_lines
         .iter()
-        .skip(1)
+        .rev()
+        .take(stack_lines.len() - 1)
         .map(|line| {
             line.chars()
                 .skip(1)
@@ -41,7 +39,8 @@ fn main() {
             })
         });
 
-    let actions = procedure.lines().map(|line| {
+    // Parse rearrangement procedures
+    let steps = procedure.lines().map(|line| {
         let container = Vec::new();
         let mut step = line
             .split(" ")
@@ -62,7 +61,8 @@ fn main() {
         )
     });
 
-    for (amount, from, to) in actions {
+    // Execute rearrangement procedure
+    for (amount, from, to) in steps {
         // Part 1
         // for _ in 0..amount {
         //     let crate_value = stacks[(from.sub(1)) as usize].pop().unwrap();
@@ -77,10 +77,11 @@ fn main() {
             .for_each(|crate_value| stacks[to.sub(1) as usize].push(*crate_value))
     }
 
+    // Retrieve top crate from each stack
     let result = stacks
         .iter()
-        .map(|stack| stack.get(stack.len() - 1).unwrap())
+        .map(|stack| stack.last().unwrap())
         .collect::<String>();
 
-    println!("{result}")
+    println!("{result}");
 }

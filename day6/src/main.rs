@@ -11,7 +11,7 @@ fn main() {
     find_start(&input, MESSAGE_PATTERN, "Message");
 }
 
-fn find_start(input: &String, pattern: usize, name: &str) {
+fn find_start(input: &String, pattern: usize, name: &str) -> usize {
     let mut container = VecDeque::<char>::new();
 
     for (index, c) in input.chars().enumerate() {
@@ -22,7 +22,37 @@ fn find_start(input: &String, pattern: usize, name: &str) {
             container.push_back(c)
         } else {
             println!("{name} at {index}");
-            break;
+            return index;
         }
+    }
+
+    panic!("No {name}!");
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{find_start, MESSAGE_PATTERN, SIGNAL_PATTERN};
+
+    #[test]
+    fn should_find_signal() {
+        let sample = String::from("jkljlmnop");
+        let index = find_start(&sample, SIGNAL_PATTERN, "Signal");
+
+        assert_eq!(index, 7);
+    }
+
+    #[test]
+    fn should_find_message() {
+        let sample = String::from("jkljlmnoppasdfghjklzxcvdklfjdsjhhjkgh");
+        let index = find_start(&sample, MESSAGE_PATTERN, "Message");
+
+        assert_eq!(index, 23);
+    }
+
+    #[test]
+    #[should_panic]
+    fn should_panic_if_too_few_chars() {
+        let sample = String::from("Foo");
+        find_start(&sample, SIGNAL_PATTERN, "Signal");
     }
 }

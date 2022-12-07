@@ -11,7 +11,7 @@ fn main() {
     find_start(&input, MESSAGE_PATTERN, "Message");
 }
 
-fn find_start(input: &String, pattern: usize, name: &str) -> usize {
+fn find_start(input: &str, pattern: usize, name: &str) -> usize {
     let mut container = VecDeque::<char>::new();
 
     for (index, c) in input.chars().enumerate() {
